@@ -1,0 +1,147 @@
+A JSON payload refers to the data that is sent or received in a JSON format within a request or response message. In the context of web development, it typically refers to the data contained within the body of an HTTP request or response, formatted as JSON.
+<div>
+    <Header />
+    <Routes>
+        <Route path = "myProfile" element = {<Profile />}/>
+        <Route path = "/" element = {<Login/>}></Route>
+    </Routes>
+</div>
+import React from "react";
+import { useEffect } from "react";
+import $ from "jquery";
+import rcb from "./images/RCB.jpg"
+import { taskContext } from "../index.js";
+import { useContext,useState} from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+function Login() {
+    useEffect(() => {
+        function fullHeight() {
+            $('.js-fullheight').css('height', $(window).height());
+            $(window).resize(function () {
+                $('.js-fullheight').css('height', $(window).height());
+            });
+        }
+        fullHeight();
+
+        $(".toggle-password").click(function () {
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") === "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    }, []);
+    const {setIsAuthenticated } = useContext(taskContext);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value)
+    }
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value)
+    }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        // try {
+        //     const response = await axios.post("http://localhost:4000/api/v1/login", {
+        //         email,
+        //         password,
+        //     }, {
+        //         headers: {
+        //             "Content-Type": "application/json"
+        //         },
+        //         withCredentials: true
+        //     });
+        //     toast.success(response.data.message);
+        //     // handleAuthentication();
+        //     setIsAuthenticated(true);
+        // }
+        // catch (error) {
+        //     if(error.response)
+        //     {
+        //         toast.error(error.response.data.message);
+        //         setPassword('');
+        //         // console.log(error.response.data);
+        //     }
+        //     else
+        //     {
+        //         toast.error("Error");
+        //         // console.log(error.message);
+        //     }
+        //     // handleAuthentication();
+        //     setIsAuthenticated(false);
+        // }
+        toast.success("Success");
+        console.log("Success");
+    }
+    // if(isAuthenticated) return <Navigate to = "/" />
+    return (
+        <body className="img js-fullheight" style={{ backgroundImage: `url(${rcb})` }}>
+            <section className="ftco-section">
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-md-6 col-lg-4">
+                            <div className="login-wrap p-0">
+                                <h3 className="mb-4 text-center" style = {{paddingTop: 50}}>Have an account?</h3>
+                                <form className="signin-form" onSubmit = {handleSubmit}>
+                                    <div className="form-group">
+                                        <input type="email" value = {email} onChange = {handleEmailChange} name = "" className="form-control" placeholder="Email" required />
+                                    </div>
+                                    <div className="form-group">
+                                        <input id="password-field" value = {password} onChange = {handlePasswordChange} name = "password" type="password" className="form-control" placeholder="Password" required />
+                                        <span toggle="#password-field" className="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                    </div>
+                                    <div className="form-group">
+                                        <button type="submit" className="form-control btn btn-primary submit px-3">Sign In</button>
+                                    </div>
+                                    <div className="form-group d-md-flex">
+                                        <div className="w-55 text-md-right" style={{marginLeft: 220}}>
+                                            <a href="/" style={{ color: "#fff"}}>Forgot Password</a>
+                                        </div>
+                                    </div>
+                                    <center>Not a User? <Link to="/register">Sign Up</Link></center>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </body>
+    );
+}
+export default Login;
+// console.log(postinfo);
+        if (postinfo.owner.toString() === req.user._id.toString()) {
+            if (req.body.commentId === undefined) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Comment Id is required"
+                })
+            }
+            postinfo.comments.forEach((items, index) => {
+                if (items._id.toString() === req.body.commentId.toString()) {
+                    return postinfo.comments.splice(index, 1);
+                }
+            })
+            await postinfo.save();
+            res.status(200).json({
+                success: true,
+                message: "Selected Comment has been Deleted"
+            })
+        }
+        else {
+            postinfo.comments.forEach((items, index) => {
+                if (items.user.toString() === req.user._id.toString()) {
+                    return postinfo.comments.splice(index, 1);
+                }
+            })
+            await postinfo.save();
+            res.status(200).json({
+                success: true,
+                message: "Your Comment has been Deleted"
+            })
+        }

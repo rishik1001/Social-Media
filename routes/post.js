@@ -1,0 +1,14 @@
+import express from "express";
+import { isAuthenticated } from "../middleware/auth.js";
+import { getAllPosts,createPost, likeAndUnlikePost, deletePost, getpostsOfFollowing, updateCaption, addComment, deleteComment, getAllLikesOfPost, getMyPosts } from "../controllers/post.js";
+const router = express.Router();
+router.get("/my",isAuthenticated,getAllPosts);
+router.route("/post/upload").post(isAuthenticated,createPost);
+router.route("/post/:id").get(isAuthenticated,likeAndUnlikePost);
+router.route("/post/:id").delete(isAuthenticated,deletePost);
+router.route("/post/likes/:id").get(isAuthenticated,getAllLikesOfPost);
+router.route("/post/:id").put(isAuthenticated,updateCaption);
+router.route("/posts").get(isAuthenticated,getpostsOfFollowing);
+router.route("/myposts").get(isAuthenticated,getMyPosts);
+router.route("/post/comment/:id").post(isAuthenticated,addComment).delete(isAuthenticated,deleteComment);
+export default router;
